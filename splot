@@ -31,7 +31,7 @@ def main():
                         help="Transpose data before plotting")
     parser.add_argument('--stretch-x',  action = "store_true",
                         help = "Should subsequent files be mapped onto the x range of the first?")
-    parser.add_argument('--col',  default = 0,
+    parser.add_argument('--col',  default = None,
                         help = "Column of the data to plot")
     args = parser.parse_args()
 
@@ -58,6 +58,9 @@ def main():
 
         data = np.array(data)
 
+        if args.col is not None:
+            data = data[:, args.col]
+
         if args.transpose:
             data = np.transpose(data)
 
@@ -67,9 +70,9 @@ def main():
 
 
         if args.stretch_x:
-            ax.plot(np.linspace(xmin, xmax, len(data)), data[:, args.col], label = name)
+            ax.plot(np.linspace(xmin, xmax, len(data)), data, label = name)
         else:
-            ax.plot(data[:, args.col], label=name)
+            ax.plot(data, label=name)
 
     ax.legend(loc=0)
 
