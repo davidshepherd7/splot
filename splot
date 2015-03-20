@@ -27,8 +27,8 @@ def main():
                         help="Does the file have a header line?")
     parser.add_argument('filenames', nargs="*", default=["-"],
                         help="Files to plot, - reads from stdin, by default read from stdin")
-    parser.add_argument('--transpose', action="store_true",
-                        help="")
+    parser.add_argument('--transpose', '-t', action="store_true",
+                        help="Transpose data before plotting")
     parser.add_argument('--stretch-x',  action = "store_true",
                         help = "Should subsequent files be mapped onto the x range of the first?")
     parser.add_argument('--col',  default = 0,
