@@ -79,5 +79,46 @@ def main():
     pltshow()
 
 
+def rescale(data, minv, maxv):
+    data = np.array(data)
+
+    # map to [0,1]
+    data = (data - min(data)) / (max(data) - min(data))
+
+    # map to [minv, maxv]
+    data = data * (maxv - minv) +  minv
+
+    return data
+
+
+def rescale_test():
+
+    def assert_almost_equal(a, b, tol=1e-9):
+        assert(abs(a - b) < tol)
+
+    def rescale_check(x, minv, maxv):
+        x_r = rescale(x, minv, maxv)
+        assert_almost_equal(max(x_r), maxv)
+        assert_almost_equal(min(x_r), minv)
+
+    tests = [
+        # Basic
+        [[1, 2, 3, 4, 5.0], 1, 2],
+
+        # Negative values
+        [[1, 2, 3, 4, 5.0], -5.1, 2.5],
+        [[1, 2, 3, 4, 5.0], -5.1,- 2.5],
+        [[ -1, 0, 2, 4, 5.0], 1, 2],
+
+        # More with floats
+        [[1, 2, 3, 4, 5.0], 1, 2.5],
+        [[ -1.4125, 0, 2, 4, 5.120983], 1, 2],
+    ]
+
+
+    for x, minv, maxv in tests:
+        yield rescale_check, x, minv, maxv
+
+
 if __name__ == '__main__':
     sys.exit(main())
