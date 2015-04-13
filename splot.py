@@ -92,7 +92,7 @@ def main():
             y_label = headers[1]
         else:
             x_label = "Number"
-            x_data = range(0, data.shape[0])
+            x_data = list(range(0, data.shape[0]))
             y_data = data
             y_label = headers[0]
 
