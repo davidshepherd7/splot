@@ -3,6 +3,7 @@
 import sys
 import argparse
 import numpy as np
+import re
 
 from matplotlib.pyplot import show as pltshow
 from matplotlib.pyplot import subplots
@@ -33,6 +34,8 @@ def main():
                         help = "Should subsequent files be mapped onto the x range of the first?")
     parser.add_argument('--col',  default = None,
                         help = "Column of the data to plot")
+    parser.add_argument('--use-x', action = "store_true",
+                        help = "Use first column of data as x values")
     args = parser.parse_args()
 
 
@@ -46,33 +49,52 @@ def main():
     for name in args.filenames:
         with open_or_stdin(name, 'r') as f:
 
-            if args.header:
-                header = f.readline()
+            # Check the first line, if it's text then treat it as a header
+            maybe_header = f.readline()
+            ncol = len(maybe_header.strip().split(args.delimiter))
+
+            if re.match('^[A-Za-z]', maybe_header) or args.header:
+                headers = maybe_header.strip().split(args.delimiter)
+                start_line = []
             else:
-                header = None
+                headers = [str(i) for i in range(0, ncol)]
+                start_line = [maybe_header]
 
             data = []
-            for line in f.readlines():
+            for line in start_line + f.readlines():
                 l = [float(x) for x in line.strip().split(args.delimiter)]
                 data.append(l)
 
         data = np.array(data)
-
-        if args.col is not None:
-            data = data[:, args.col]
-
         if args.transpose:
             data = np.transpose(data)
 
-        if args.stretch_x and xmin is None and xmax is None:
-            xmin = 0
-            xmax = len(data)
-
-
-        if args.stretch_x:
-            ax.plot(np.linspace(xmin, xmax, len(data)), data, label = name)
+        # If we said to, then use the first col as x values
+        if args.use_x:
+            x_data = data[:, 0]
+            x_label = headers[0]
+            y_data = data[:, 1:]
+            y_label = headers[1]
         else:
-            ax.plot(data, label=name)
+            x_label = "Number"
+            x_data = range(0, data.shape[0])
+            y_data = data
+            y_label = headers[0]
+
+        # Maybe pick some specific cols for the y values
+        if args.col is not None:
+            y_data = y_data[:, args.col]
+            y_label = headers[args.col]
+
+
+        # Maybe stretch the data to fit the first files x scale
+        if args.stretch_x and xmin is None and xmax is None:
+            xmin = min(x_data)
+            xmax = max(x_data)
+        elif args.stretch_x:
+            x_data = rescale(x_data, xmin, xmax)
+
+        ax.plot(x_data, y_data, label = name)
 
     ax.legend(loc=0)
 
