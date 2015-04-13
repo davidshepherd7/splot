@@ -36,6 +36,8 @@ def main():
                         help = "Column of the data to plot")
     parser.add_argument('--use-x', action = "store_true",
                         help = "Use first column of data as x values")
+    parser.add_argument('--scatter', action = "store_true",
+                        help = "Create a scatter plot")
     args = parser.parse_args()
 
 
@@ -110,7 +112,11 @@ def main():
             x_data = rescale(x_data, xmin, xmax)
 
         for y, name in zip(zip(*list(y_data)), headers):
-            ax.plot(x_data, y, label = name)
+
+            if args.scatter:
+                ax.scatter(x_data, y, label = name)
+            else:
+                ax.plot(x_data, y, label = name)
 
     ax.legend(loc=0)
 
