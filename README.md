@@ -8,9 +8,9 @@ Based on python's matplotlib.
 
 Full documentation is provided by `splot -h`:
 
-    usage: splot [-h] [--delimiter DELIMITER] [--header] [--transpose]
-                 [--stretch-x] [--col COL]
-                 [filenames [filenames ...]]
+    usage: splot.py [-h] [--delimiter DELIMITER] [--header] [--transpose]
+                    [--stretch-x] [--col COL] [--use-x] [--scatter]
+                    [filenames [filenames ...]]
     
     Take two-column dataset and create a simple 2D plot.
     
@@ -23,7 +23,9 @@ Full documentation is provided by `splot -h`:
       --delimiter DELIMITER, -d DELIMITER
                             Set the delimiter, by default use any whitespace.
       --header              Does the file have a header line?
-      --transpose
+      --transpose, -t       Transpose data before plotting
       --stretch-x           Should subsequent files be mapped onto the x range of
                             the first?
       --col COL             Column of the data to plot
+      --use-x               Use first column of data as x values
+      --scatter             Create a scatter plot
