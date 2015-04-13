@@ -109,7 +109,8 @@ def main():
         elif args.stretch_x:
             x_data = rescale(x_data, xmin, xmax)
 
-        ax.plot(x_data, y_data, label = name)
+        for y, name in zip(zip(*list(y_data)), headers):
+            ax.plot(x_data, y, label = name)
 
     ax.legend(loc=0)
 
