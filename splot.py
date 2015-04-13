@@ -53,16 +53,31 @@ def main():
             maybe_header = f.readline()
             ncol = len(maybe_header.strip().split(args.delimiter))
 
-            if re.match('^[A-Za-z]', maybe_header) or args.header:
+            # Get headers
+            if args.transpose:
+                # Fill in later
+                headers = []
+                start_line = [maybe_header]
+
+            elif re.match('^[A-Za-z]', maybe_header) or args.header:
                 headers = maybe_header.strip().split(args.delimiter)
                 start_line = []
+
             else:
                 headers = [str(i) for i in range(0, ncol)]
                 start_line = [maybe_header]
 
+
+            # Read data
             data = []
             for line in start_line + f.readlines():
-                l = [float(x) for x in line.strip().split(args.delimiter)]
+                line = line.strip().split(args.delimiter)
+
+                if args.transpose and args.header:
+                    headers.append(line[0])
+                    line = line[1:]
+
+                l = [float(x) for x in line]
                 data.append(l)
 
         data = np.array(data)
