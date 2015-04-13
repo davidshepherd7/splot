@@ -32,7 +32,7 @@ def main():
                         help="Transpose data before plotting")
     parser.add_argument('--stretch-x',  action = "store_true",
                         help = "Should subsequent files be mapped onto the x range of the first?")
-    parser.add_argument('--col',  default = None,
+    parser.add_argument('--col',  default = None, type = int,
                         help = "Column of the data to plot")
     parser.add_argument('--use-x', action = "store_true",
                         help = "Use first column of data as x values")
